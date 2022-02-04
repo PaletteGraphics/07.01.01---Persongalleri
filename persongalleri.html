@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      img {
+        max-width: 50%;
+        height: auto;
+      }
+      section {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      }
+      article {
+        display: grid;
+        border: 1px solid #000;
+        margin-bottom: 5px;
+        margin-top: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section class="liste">
+        <template>
+          <article>
+            <h2 class="navn"></h2>
+            <img src="" alt="" class="billede" />
+            <p class="email"></p>
+          </article>
+        </template>
+      </section>
+    </main>
+    <script>
+      const container = document.querySelector("section");
+      const template = document.querySelector("template");
+
+      const url = "https://freds-0996.restdb.io/rest/medlemmer";
+
+      const options = {
+        headers: {
+          "x-apikey": "61fcf7e63f215f310a37be62",
+        },
+      };
+
+      async function hentData() {
+        const respons = await fetch(url, options);
+        const json = await respons.json();
+        vis(json);
+      }
+      function vis(json) {
+        json.forEach((medlem) => {
+          const klon = template.cloneNode(true).content;
+          klon.querySelector(
+            "h2"
+          ).textContent = `${medlem.fornavn} ${medlem.efternavn}`;
+          klon.querySelector("img").src = "/faces/" + medlem.billede;
+          klon.querySelector(".email").textContent = medlem.email;
+          container.appendChild(klon);
+        });
+      }
+
+      hentData();
+    </script>
+  </body>
+</html>
